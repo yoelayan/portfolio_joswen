@@ -9,7 +9,6 @@ import * as THREE from "three";
 THREE.ColorManagement.enabled = false;
 
 const canvas = document.getElementById("scene");
-if (canvas) boot(canvas);
 
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const easeOut = (x) => 1 - Math.pow(1 - x, 3);
@@ -351,3 +350,6 @@ function safeJson(value) {
     return [];
   }
 }
+
+// Se arranca al final, cuando todas las constantes del módulo (shaders) ya están definidas.
+if (canvas) boot(canvas);
