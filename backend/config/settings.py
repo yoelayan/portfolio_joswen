@@ -104,6 +104,10 @@ DATABASES = {
 }
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# El buscador de Wagtail sobre Postgres usa SearchVectorField / GinIndex.
+if "postgresql" in DATABASES["default"]["ENGINE"]:
+    INSTALLED_APPS.append("django.contrib.postgres")
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},

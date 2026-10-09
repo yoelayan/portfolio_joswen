@@ -88,7 +88,7 @@ Proyecto con tres servicios y un bucket:
 
 1. **Postgres** — plantilla oficial de Railway.
 2. **Bucket** — almacenamiento S3 de Railway (privado; el backend lo expone en `/media/` con caché).
-3. **backend** — este repo, *Root Directory* `/backend`, configuración en `/backend/railway.json` (Dockerfile). Ejecuta migraciones y `bootstrap` en cada arranque.
-4. **frontend** — este repo, *Root Directory* `/frontend`, configuración en `/frontend/railway.json` (Dockerfile).
+3. **backend** — este repo, *Root Directory* `/backend` (Dockerfile), healthcheck `/api/health/`. Ejecuta migraciones y `bootstrap` en cada arranque.
+4. **frontend** — este repo, *Root Directory* `/frontend` (Dockerfile), healthcheck `/healthz`.
 
 Cada `git push` a la rama principal redespliega ambos servicios.
