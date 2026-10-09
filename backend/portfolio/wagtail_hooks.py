@@ -33,6 +33,6 @@ register_snippet(ServiceViewSet)
 
 @hooks.register("construct_main_menu")
 def simplify_menu(request, menu_items):
-    """Admin mínimo: se ocultan el árbol de páginas, informes y ayuda."""
-    hidden = {"explorer", "reports", "help"}
+    """Admin mínimo: se ocultan el árbol de páginas, documentos, informes y ayuda."""
+    hidden = {"explorer", "documents", "reports", "help"}
     menu_items[:] = [item for item in menu_items if item.name not in hidden]

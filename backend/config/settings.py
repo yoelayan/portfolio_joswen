@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "wagtail.contrib.settings",
     "wagtail.snippets",
     "wagtail.images",
+    "wagtail.documents",  # el admin de Wagtail referencia su API; el menú se oculta (solo se usan imágenes)
     "wagtail.search",
     "wagtail.admin",
     "wagtail",
