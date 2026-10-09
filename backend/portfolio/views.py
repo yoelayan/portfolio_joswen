@@ -5,6 +5,10 @@ from django.core.files.storage import default_storage
 from django.http import FileResponse, Http404, HttpResponse
 from django.views.decorators.http import require_GET
 
+# La imagen slim de Python no trae /etc/mime.types: registrar los formatos que genera Wagtail.
+mimetypes.add_type("image/webp", ".webp")
+mimetypes.add_type("image/avif", ".avif")
+
 # Solo se exponen las carpetas que usa Wagtail para imágenes.
 ALLOWED_PREFIXES = ("original_images/", "images/")
 
