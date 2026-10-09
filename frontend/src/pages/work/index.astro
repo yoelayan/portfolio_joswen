@@ -1,0 +1,67 @@
+---
+import Base from "../../layouts/Base.astro";
+import ProjectCard from "../../components/ProjectCard.astro";
+import Contact from "../../components/Contact.astro";
+import { getProjects, getSite } from "../../lib/api.js";
+
+const [site, { projects, categories }] = await Promise.all([getSite(), getProjects()]);
+const s = site.settings;
+Astro.response.headers.set("Cache-Control", "public, s-maxage=15, stale-while-revalidate=60");
+---
+
+<Base
+  title={`Trabajo — ${s.name}`}
+  description={`Proyectos de ${s.name}: ${s.role_line}.`}
+  accent={s.accent_color}
+  image={projects[0]?.cover?.src ?? ""}
+  name={s.name}
+  navTheme="light"
+>
+  <section class="section section--paper project-head" data-theme="light">
+    <h1 class="display">Trabajo</h1>
+
+    {
+      categories.length > 1 && (
+        <div class="filters" role="group" aria-label="Filtrar por categoría" style="margin-top: clamp(2rem, 5vw, 4rem)">
+          <button class="chip" type="button" data-filter="" aria-pressed="true">
+            Todo
+          </button>
+          {categories.map((category) => (
+            <button class="chip" type="button" data-filter={category} aria-pressed="false">
+              {category}
+            </button>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      projects.length > 0 ? (
+        <div class="work-grid work-grid--even" data-grid style="margin-top: clamp(2rem, 5vw, 4rem)">
+          {projects.map((project) => (
+            <ProjectCard project={project} aspect="4 / 5" sizes="(min-width: 900px) 50vw, 100vw" />
+          ))}
+        </div>
+      ) : (
+        <p class="empty" style="margin-top: 3rem">Estoy preparando los primeros proyectos. Vuelve pronto.</p>
+      )
+    }
+  </section>
+
+  <Contact settings={s} />
+</Base>
+
+<script>
+  const chips = document.querySelectorAll("[data-filter]");
+  const cards = document.querySelectorAll("[data-grid] > .card");
+
+  chips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      const filter = chip.dataset.filter;
+      chips.forEach((other) => other.setAttribute("aria-pressed", String(other === chip)));
+      cards.forEach((card) => {
+        card.hidden = filter !== "" && card.dataset.category !== filter;
+      });
+    });
+  });
+</script>

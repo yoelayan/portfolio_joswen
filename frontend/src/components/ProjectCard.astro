@@ -1,0 +1,33 @@
+---
+const { project, aspect = "4 / 5", sizes = "(min-width: 900px) 55vw, 100vw" } = Astro.props;
+const cover = project.cover;
+---
+
+<a class="card" href={`/work/${project.slug}`} data-category={project.category || ""}>
+  <div class="card__media" style={`aspect-ratio:${aspect}`}>
+    {
+      cover ? (
+        <img
+          src={cover.src}
+          srcset={cover.srcset}
+          sizes={sizes}
+          alt={cover.alt}
+          width={cover.width}
+          height={cover.height}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        <div class="card__ph" aria-hidden="true" />
+      )
+    }
+    <span class="card__view" aria-hidden="true">Ver proyecto</span>
+  </div>
+  <div class="card__meta">
+    <h3 class="card__title">{project.title}</h3>
+    <p class="card__tags">
+      {project.category && <span>{project.category}</span>}
+      {project.year && <span>{project.year}</span>}
+    </p>
+  </div>
+</a>

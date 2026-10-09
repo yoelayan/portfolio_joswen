@@ -1,0 +1,45 @@
+---
+import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+
+const { title, description = "", accent = "#ff5a1f", image = "", name = "Joswen", navTheme = "dark" } = Astro.props;
+const safeAccent = /^#[0-9a-fA-F]{6}$/.test(accent) ? accent : "#ff5a1f";
+const favicon =
+  "data:image/svg+xml," +
+  encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='#1d2dea'/><circle cx='16' cy='16' r='9' fill='${safeAccent}'/></svg>`
+  );
+---
+
+<!doctype html>
+<html lang="es" style={`--accent:${safeAccent}`}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#1d2dea" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:type" content="website" />
+    {image && <meta property="og:image" content={image} />}
+    <meta name="twitter:card" content={image ? "summary_large_image" : "summary"} />
+    <link rel="icon" href={favicon} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Newsreader:ital,opsz,wght@0,6..72,300..600;1,6..72,300..600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <Nav name={name} theme={navTheme} />
+    <main id="contenido">
+      <slot />
+    </main>
+    <script>
+      import "../scripts/motion.js";
+    </script>
+  </body>
+</html>

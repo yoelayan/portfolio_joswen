@@ -1,0 +1,67 @@
+---
+const { settings, covers = [] } = Astro.props;
+const words = settings.hero_title.split(/\s+/).filter(Boolean);
+const spline = settings.spline_url || "";
+---
+
+<section class="hero" data-theme="dark" id="inicio">
+  <canvas
+    id="scene"
+    class="scene"
+    aria-hidden="true"
+    data-covers={JSON.stringify(covers)}
+    data-accent={settings.accent_color}
+    data-spline={spline ? "1" : "0"}></canvas>
+
+  {
+    spline && (
+      <div class="hero__spline">
+        <spline-viewer url={spline} loading-anim-type="spinner-small-light" />
+      </div>
+    )
+  }
+
+  <div class="marks" aria-hidden="true">
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="14" cy="14" r="6" /><path d="M14 0v10M14 18v10M0 14h10M18 14h10" />
+    </svg>
+    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5">
+      <circle cx="14" cy="14" r="6" /><path d="M14 0v10M14 18v10M0 14h10M18 14h10" />
+    </svg>
+  </div>
+
+  {settings.availability_text && <p class="hero__badge ui">{settings.availability_text}</p>}
+
+  <h1 class="display hero__title">
+    {
+      words.map((word, i) => (
+        <>
+          <span class="word">
+            <span style={`--i:${i}`}>{word}</span>
+          </span>{" "}
+        </>
+      ))
+    }
+  </h1>
+
+  <div class="hero__foot">
+    <p class="hero__lede">{settings.hero_subtitle}</p>
+    <div class="hero__cta">
+      <a class="btn btn--solid" href="#trabajo">Ver proyectos</a>
+      <a class="btn" href="#contacto">Escríbeme</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import "../scripts/scene.js";
+</script>
+{
+  spline && (
+    <script
+      type="module"
+      src="https://unpkg.com/@splinetool/viewer/build/spline-viewer.js"
+      is:inline
+    />
+  )
+}

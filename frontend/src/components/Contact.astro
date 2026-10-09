@@ -1,0 +1,33 @@
+---
+const { settings: s } = Astro.props;
+const socials = [
+  ["Instagram", s.instagram],
+  ["Behance", s.behance],
+  ["Dribbble", s.dribbble],
+  ["LinkedIn", s.linkedin],
+].filter(([, url]) => url);
+---
+
+<section class="section section--accent" id="contacto" data-theme="light">
+  <h2 class="title contact__title">{s.contact_title}</h2>
+  {s.contact_text && <p class="contact__text">{s.contact_text}</p>}
+  <a class="contact__mail link-underline" href={`mailto:${s.email}`}>{s.email}</a>
+  {
+    socials.length > 0 && (
+      <ul class="contact__social">
+        {socials.map(([label, url]) => (
+          <li>
+            <a class="link-underline" href={url} target="_blank" rel="noopener noreferrer">
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+  <footer class="footer">
+    <span>© {new Date().getFullYear()} {s.name}</span>
+    {s.location && <span>{s.location}</span>}
+    <a class="link-underline" href="#contenido">Volver arriba</a>
+  </footer>
+</section>

@@ -1,0 +1,102 @@
+---
+import Base from "../../layouts/Base.astro";
+import Contact from "../../components/Contact.astro";
+import { getProject, getSite } from "../../lib/api.js";
+
+const { slug } = Astro.params;
+const [site, project] = await Promise.all([getSite(), getProject(slug)]);
+
+if (!project) {
+  return Astro.rewrite("/404");
+}
+
+const s = site.settings;
+Astro.response.headers.set("Cache-Control", "public, s-maxage=15, stale-while-revalidate=60");
+
+const meta = [
+  ["Cliente", project.client],
+  ["Año", project.year],
+  ["Mi rol", project.role],
+  ["Categoría", project.category],
+].filter(([, value]) => value);
+---
+
+<Base
+  title={`${project.title} — ${s.name}`}
+  description={project.summary || `${project.title}, proyecto de ${s.name}.`}
+  accent={s.accent_color}
+  image={project.cover?.src ?? ""}
+  name={s.name}
+  navTheme="light"
+>
+  <article class="section section--paper project-head" data-theme="light">
+    <h1 class="display">{project.title}</h1>
+
+    {
+      meta.length > 0 && (
+        <dl class="project-meta">
+          {meta.map(([label, value]) => (
+            <div>
+              <dt>{label}</dt>
+              <dd>{value}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+
+    {
+      project.cover && (
+        <figure class="project-cover">
+          <img
+            src={project.cover.src}
+            srcset={project.cover.srcset}
+            sizes="100vw"
+            alt={project.cover.alt}
+            width={project.cover.width}
+            height={project.cover.height}
+            fetchpriority="high"
+            decoding="async"
+          />
+        </figure>
+      )
+    }
+
+    {project.description && <div class="project-body prose" set:html={project.description} />}
+
+    {
+      project.gallery.length > 0 && (
+        <div class="gallery">
+          {project.gallery.map((item) => (
+            <figure data-layout={item.layout}>
+              <img
+                src={item.image.src}
+                srcset={item.image.srcset}
+                sizes={item.layout === "half" ? "(min-width: 720px) 50vw, 100vw" : "100vw"}
+                alt={item.image.alt}
+                width={item.image.width}
+                height={item.image.height}
+                loading="lazy"
+                decoding="async"
+              />
+              {item.caption && <figcaption>{item.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      )
+    }
+  </article>
+
+  {
+    project.next && (
+      <section class="section section--navy" data-theme="dark">
+        <a class="next" href={`/work/${project.next.slug}`}>
+          <p class="next__label ui">Siguiente proyecto</p>
+          <p class="title next__title">{project.next.title}</p>
+        </a>
+      </section>
+    )
+  }
+
+  <Contact settings={s} />
+</Base>

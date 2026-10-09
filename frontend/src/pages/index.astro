@@ -1,0 +1,105 @@
+---
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import ProjectCard from "../components/ProjectCard.astro";
+import Contact from "../components/Contact.astro";
+import { getSite } from "../lib/api.js";
+
+const site = await getSite();
+const s = site.settings;
+Astro.response.headers.set("Cache-Control", "public, s-maxage=15, stale-while-revalidate=60");
+
+const aspects = ["4 / 3", "4 / 5", "4 / 5", "4 / 3"];
+const covers = site.featured.map((p) => p.cover?.medium).filter(Boolean);
+const ogImage = site.featured[0]?.cover?.src ?? "";
+---
+
+<Base
+  title={`${s.name} — ${s.role_line}`}
+  description={s.hero_subtitle}
+  accent={s.accent_color}
+  image={ogImage}
+  name={s.name}
+>
+  <Hero settings={s} covers={covers} />
+
+  <section class="section section--paper" id="trabajo" data-theme="light">
+    <div class="section__head">
+      <h2 class="title">Trabajo seleccionado</h2>
+      <a class="btn" href="/work">Ver todo el trabajo</a>
+    </div>
+    {
+      site.featured.length > 0 ? (
+        <div class="work-grid">
+          {site.featured.map((project, i) => (
+            <ProjectCard project={project} aspect={aspects[i % aspects.length]} />
+          ))}
+        </div>
+      ) : (
+        <p class="empty">Estoy preparando los primeros proyectos. Vuelve pronto.</p>
+      )
+    }
+  </section>
+
+  {
+    site.services.length > 0 && (
+      <section class="section section--navy" id="servicios" data-theme="dark">
+        <div class="section__head">
+          <h2 class="title">Lo que hago</h2>
+        </div>
+        <ul class="services">
+          {site.services.map((service) => (
+            <li class="service">
+              <h3 class="service__name">{service.title}</h3>
+              <p class="service__desc">{service.description}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="section section--klein" id="sobre-mi" data-theme="dark">
+    <div class="about">
+      {
+        s.portrait ? (
+          <div class="about__portrait">
+            <img
+              src={s.portrait.src}
+              srcset={s.portrait.srcset}
+              sizes="(min-width: 900px) 40vw, 100vw"
+              alt={s.portrait.alt}
+              width={s.portrait.width}
+              height={s.portrait.height}
+              loading="lazy"
+              decoding="async"
+            />
+          </div>
+        ) : (
+          <div class="about__portrait about__portrait--empty" aria-hidden="true" />
+        )
+      }
+      <div class="about__body">
+        <h2 class="title">{s.about_title}</h2>
+        <div class="prose" set:html={s.about_text} />
+      </div>
+    </div>
+
+    {
+      site.clients.length > 0 && (
+        <div class="marquee" aria-label="Marcas con las que he trabajado">
+          <div class="marquee__track">
+            <ul class="marquee__group">
+              {site.clients.map((client) => <li class="marquee__item">{client}</li>)}
+            </ul>
+            <ul class="marquee__group" aria-hidden="true">
+              {site.clients.map((client) => <li class="marquee__item">{client}</li>)}
+            </ul>
+          </div>
+        </div>
+      )
+    }
+  </section>
+
+  <Contact settings={s} />
+</Base>

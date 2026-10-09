@@ -1,0 +1,16 @@
+---
+import Base from "../layouts/Base.astro";
+import { getSite } from "../lib/api.js";
+
+const site = await getSite();
+const s = site.settings;
+Astro.response.status = 404;
+---
+
+<Base title={`Página no encontrada — ${s.name}`} accent={s.accent_color} name={s.name}>
+  <section class="section section--klein notfound" data-theme="dark">
+    <h1 class="display">No encuentro esta página.</h1>
+    <p class="hero__lede">La dirección no existe o el proyecto ya no está publicado.</p>
+    <a class="btn btn--solid" href="/work">Ver el trabajo</a>
+  </section>
+</Base>

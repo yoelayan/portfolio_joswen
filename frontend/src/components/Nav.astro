@@ -1,0 +1,13 @@
+---
+const { name = "Joswen", theme = "dark" } = Astro.props;
+---
+
+<header class="nav" data-theme={theme}>
+  <a class="nav__brand" href="/" aria-label={`${name}, inicio`}>{name}</a>
+  <nav class="nav__links" aria-label="Principal">
+    <a href="/#trabajo" class="nav__keep">Trabajo</a>
+    <a href="/#servicios">Servicios</a>
+    <a href="/#sobre-mi">Sobre mí</a>
+    <a href="/#contacto" class="nav__keep">Contacto</a>
+  </nav>
+</header>
